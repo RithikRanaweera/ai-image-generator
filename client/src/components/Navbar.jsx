@@ -1,19 +1,21 @@
-import React, { useState } from 'react'
+import React, { useContext } from 'react'
 import { assets } from '../assets/assets.js'
 import { Link, useNavigate } from 'react-router-dom'
+import { AppContext } from '../context/AppContext.jsx'
 
 const Navbar = () => {
-    const [user,setUser] = useState(true);
+
+    const { user } = useContext(AppContext);
 
     const navigate = useNavigate();
     return (
-        <div className='flex items-center justify-between py-4'> 
+        <div className='flex items-center justify-between py-4'>
             <Link to='/ '>
                 <img src={assets.logo} alt="" className='w-28 sm:w-32 lg:w-40' />
             </Link>
             {user ?
                 <div className='flex items-center gap-2 sm:gap-3'>
-                    <button className='flex gap-2 items-center bg-blue-100 px-4 sm:px-6 py-1.5 sm:py-3 rounded-full
+                    <button onClick={() => navigate('/buy')} className='flex gap-2 items-center bg-blue-100 px-4 sm:px-6 py-1.5 sm:py-3 rounded-full
                     hover:scale-105 transition-all duration-700'>
                         <img className='w-5' src={assets.credit_star} alt="" />
                         <p className='text-xs sm:text-sm font-medium text-gray-600'>Creadits left : 50</p>
@@ -28,11 +30,11 @@ const Navbar = () => {
                         </div>
                     </div>
                 </div>
-            :
+                :
                 <div className='flex items-center gap-2 sm:gap-5'>
-                    <p onClick={()=> navigate('/buy')} className='cursor-pointer'>pricing</p>
+                    <p onClick={() => navigate('/buy')} className='cursor-pointer'>pricing</p>
                     <button className='bg-zinc-800 text-white px-7 py-2 sm:px-10 text-sm rounded-full '>login</button>
-                </div>    
+                </div>
             }
         </div>
     )
