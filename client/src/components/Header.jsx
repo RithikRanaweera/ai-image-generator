@@ -22,8 +22,18 @@ const header = () => {
         Generate Images <img className='h-6' src={assets.star_group} alt="" />
       </button>
 
+      <div className='flex flex-wrap justify-center mt-16 gap-3'>
+        {Array(6).fill('').map((items, index)=>(
+          <img className='rounded hover:scale-105 transition-all duration-300 cursor-pointer max-sm:w-10' 
+          src={index % 2 ===0 ? assets.sample_img_2 : assets.sample_img_1} 
+          width={70} key={index}/>
+        ))}
+      </div> 
+
+      <p className="mt-2 text-neutral-600">Generated images from imagify</p>
+
     </div>
   )
 }
 
-export default header
+export default header 
