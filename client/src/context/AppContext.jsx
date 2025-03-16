@@ -13,13 +13,13 @@ const AppContextProvider = (props) => {
 
     const backendUrl = import.meta.env.VITE_BACKEND_URL
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
-    const loadCreditsData = async () =>{
+    const loadCreditsData = async () => {
         try {
-            const {data} = await axios.get(backendUrl + '/api/user/credits',{headers: {token}})
+            const { data } = await axios.get(backendUrl + '/api/user/credits', { headers: { token } })
 
-            if(data.success){
+            if (data.success) {
                 setCredit(data.credits)
                 setUser(data.user)
             }
@@ -32,18 +32,19 @@ const AppContextProvider = (props) => {
 
     const generateImage = async (prompt) => {
         try {
-            const {data} = await axios.post(backendUrl+ '/api/image/generate-image',
-                {prompt}, {headers: {token}}
+            const { data } = await axios.post(backendUrl + '/api/image/generate-image',
+                { prompt }, { headers: { token } }
             )
 
-            if(data.success){
+            if (data.success) {
                 loadCreditsData()
                 return data.resultImage
             } else {
                 toast.error(data.message)
                 loadCreditsData()
-                if(data.creditBalance === 0){
-                    navigate('/buy')
+                if (data.creditBalance === 0) {
+                    console.log("navigate")
+                    navigate('/buy');
                 }
             }
 
@@ -53,14 +54,14 @@ const AppContextProvider = (props) => {
         }
     }
 
-    const logout = () =>{
+    const logout = () => {
         localStorage.removeItem('token');
         setToken('')
         setUser(null)
     }
 
-    useEffect(() =>{
-        if(token){
+    useEffect(() => {
+        if (token) {
             loadCreditsData()
         }
     }, [token])
