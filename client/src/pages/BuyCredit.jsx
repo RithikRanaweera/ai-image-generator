@@ -2,11 +2,57 @@ import React, { useContext } from 'react'
 import { assets, plans } from '../assets/assets'
 import { AppContext } from '../context/AppContext'
 import { motion } from "motion/react"
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import axios from 'axios'
+//import { loadStripe } from "@stripe/stripe-js";
 
 
 const BuyCredit = () => {
 
-  const { user } = useContext(AppContext);
+  const { user, backendUrl, loadCreditsData, token, setShowLogin } = useContext(AppContext);
+
+  const navigate = useNavigate();
+
+  //const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE);
+
+  //payment getaway
+  const initPay = async (order) => {
+    const options = {
+      key: import.meta.env.VITE_STRIPE_PUBLISHABLE,
+      amount: order.amount,
+      currency: order.currency,
+      name: 'Credits Payment',
+      description: 'Credits Payment',
+      order_id: order.id,
+      receipt: order.receipt,
+      handler: async (Response) => {
+        console.log(Response)
+      }
+    }
+    const rzp = new window.Razorpay(options)
+    rzp.open()
+  }
+
+  // payment getaway
+  const paymentStripe = async (planId) => {
+    try {
+      if (!user) {
+        setShowLogin(true)
+      }
+
+      const { data } = await axios.post(backendUrl + '/api/user/pay-stripe', { planId }, { headers: { token } })
+
+      if (data.success) {
+        initPay(data.order)
+      }
+
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
+
+
 
   return (
     <motion.div
@@ -28,7 +74,7 @@ const BuyCredit = () => {
             <p className='text-sm'>{item.desc}</p>
             <p className='mt-6'>
               <span className='text-3xl font-medium'>${item.price}</span> / {item.credits} credits</p>
-            <button className='w-full bg-gray-800 text-white mt-8
+            <button onClick={() => paymentStripe(item.id)} className='w-full bg-gray-800 text-white mt-8
             text-sm rounded-md py-2.5 min-w-52'>{user ? 'Purchase' : 'Get Started'}</button>
           </div>
         ))}
