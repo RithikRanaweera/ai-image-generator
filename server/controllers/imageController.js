@@ -19,7 +19,7 @@ export const generateImage = async (req, res) => {
             return res.json({
                 success: false,
                 message: 'No CreditBalance',
-                creditBalanace: user.creditBalance
+                creditBalance: user.creditBalance
             })
         }
 
