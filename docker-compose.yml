@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173" 
+    depends_on:
+      - backend
+    networks:
+      - devops-network
+    environment:
+      VITE_BACKEND_URL: http://localhost:4000
+
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000" 
+    depends_on:
+      - mongo
+    networks:
+      - devops-network
+    environment:
+      MONGODB_URI: mongodb+srv://rithikranaweera:rithikranaweera@cluster0.awlpz.mongodb.net
+      JWT_SECRET: rane
+      CLIPDROP_API: dd7f06e8748d87d9e06694bc0c4120e10cd56ead13ae3907b62b2132a68d9054bd977de10692fad13537db5aece1760a
+
+  mongo:
+    image: mongo:5.0
+    container_name: mongo
+    ports:
+      - "27017:27017" 
+    networks:
+      - devops-network
+    volumes:
+      - mongo-data:/data/db
+
+networks:
+  devops-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
+    driver: local
