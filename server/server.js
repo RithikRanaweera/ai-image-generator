@@ -18,6 +18,3 @@ app.use('/api/image', imageRouter)
 app.get('/', (req, res) => res.send("API Working fine"))
 
 app.listen(PORT, () => console.log('server running on port ' + PORT));
-
-
-//4.20
